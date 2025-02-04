@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.devithaun.data"
+    namespace = "com.devithaun.domain"
     compileSdk = 35
 
     defaultConfig {
@@ -34,17 +34,10 @@ android {
 
 dependencies {
 
-    // Internal
-    implementation(project(":domain"))
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    // Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
 }

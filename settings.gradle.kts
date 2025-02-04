@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 rootProject.name = "LoremPicsum"
 include(":app")
 include(":data")
+include(":domain")

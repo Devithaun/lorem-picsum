@@ -1,19 +1,22 @@
 package com.devithaun.lorempicsum.ui.screens
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.devithaun.domain.model.Photo
@@ -46,28 +49,34 @@ fun PhotoList(photos: List<Photo>, filter: String?) {
 
 @Composable
 fun PhotoItem(photo: Photo) {
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(8.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp
+        )
     ) {
-        Row(
-            modifier = Modifier.padding(8.dp)
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
                 model = photo.url,
                 contentDescription = "Photo",
-                modifier = Modifier.size(100.dp)
+                modifier = Modifier.fillMaxWidth()
+                    .aspectRatio(1f),
+                contentScale = ContentScale.Crop
             )
-            Column(modifier = Modifier.padding(start = 8.dp)) {
-                Text(
-                    text = "Author: ${photo.author}",
-                    style = MaterialTheme.typography.headlineSmall
-                )
-            }
+
+            Text(
+                text = photo.author,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodySmall
+            )
         }
     }
 }
-
-
-

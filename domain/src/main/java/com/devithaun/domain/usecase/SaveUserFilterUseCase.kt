@@ -1,7 +1,8 @@
 package com.devithaun.domain.usecase
 
 import com.devithaun.domain.repository.PhotoRepository
+import javax.inject.Inject
 
-class SaveUserFilterUseCase constructor(private val repository: PhotoRepository) {
+class SaveUserFilterUseCase @Inject constructor(private val repository: PhotoRepository) {
     suspend operator fun invoke(author: String) = repository.saveUserFilter(author)
 }

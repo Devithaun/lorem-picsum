@@ -47,4 +47,7 @@ dependencies {
     // DI (Hilt)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
+    // GSON
+    implementation(libs.gson)
 }

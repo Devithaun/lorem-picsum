@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
+import androidx.room.Room
+import com.devithaun.data.db.PhotoDao
+import com.devithaun.data.db.PhotoDatabase
 import com.devithaun.data.network.PhotoApi
 import com.devithaun.data.repository.PhotoRepositoryImpl
 import com.devithaun.domain.repository.PhotoRepository
@@ -40,7 +43,23 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePhotoRepository(api: PhotoApi, dataStore: DataStore<Preferences>): PhotoRepository {
-        return PhotoRepositoryImpl(api, dataStore)
+    fun providePhotoRepository(api: PhotoApi, dataStore: DataStore<Preferences>, photoDao: PhotoDao): PhotoRepository {
+        return PhotoRepositoryImpl(api, dataStore, photoDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRoomDatabase(@ApplicationContext context: Context): PhotoDatabase {
+        return Room.databaseBuilder(
+            context.applicationContext,
+            PhotoDatabase::class.java,
+            "photo_database"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun providePhotoDao(database: PhotoDatabase): PhotoDao {
+        return database.photoDao()
     }
 }

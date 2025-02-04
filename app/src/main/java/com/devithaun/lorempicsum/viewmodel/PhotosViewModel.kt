@@ -25,6 +25,9 @@ class PhotosViewModel @Inject constructor(
     private val _filter = MutableStateFlow<String?>(null)
     val filter: StateFlow<String?> = _filter
 
+    private val _loading = MutableStateFlow(true)
+    val loading: StateFlow<Boolean> = _loading
+
     init {
         viewModelScope.launch {
             _filter.value = getUserFilterUseCase()
@@ -32,14 +35,16 @@ class PhotosViewModel @Inject constructor(
         }
     }
 
-    fun loadPhotos() {
+    private fun loadPhotos() {
         viewModelScope.launch {
+            _loading.value = true
             val photos = getPhotosUseCase()
             _photos.value = if (_filter.value.isNullOrEmpty()) {
                 photos
             } else {
                 photos.filter { it.author == _filter.value }
             }
+            _loading.value = false
         }
     }
 

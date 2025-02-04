@@ -69,8 +69,12 @@ dependencies {
     // DI (Hilt)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+
+    // Coil
+    implementation(libs.coil.compose)
 }

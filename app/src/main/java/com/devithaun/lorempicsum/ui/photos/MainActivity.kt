@@ -1,4 +1,4 @@
-package com.devithaun.lorempicsum
+package com.devithaun.lorempicsum.ui.photos
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

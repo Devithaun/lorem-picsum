@@ -20,6 +20,7 @@ appcompat = "1.7.0"
 material = "1.12.0"
 mockitoCore = "5.15.2"
 mockitoInline = "5.2.0"
+mockitoKotlin = "5.4.0"
 retrofit = "2.9.0"
 ksp = "2.1.10-1.0.29"
 roomRuntime = "2.6.1"
@@ -55,6 +56,7 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 
 [plugins]

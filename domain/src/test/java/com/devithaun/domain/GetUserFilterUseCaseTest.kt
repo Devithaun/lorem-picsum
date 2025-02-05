@@ -24,7 +24,7 @@ class GetUserFilterUseCaseTest {
     }
 
     @Test
-    fun onGetUserFilter_onSuccess() = runTest {
+    fun author_filter_returned_on_successful_invoke() = runTest {
         Mockito.`when`(repository.getUserFilter()).thenReturn("Dave")
 
         val result = useCase.invoke()
@@ -33,7 +33,7 @@ class GetUserFilterUseCaseTest {
     }
 
     @Test
-    fun onGetUserFilter_onNullFilter() = runTest {
+    fun null_filter_returned_on_empty_filter() = runTest {
         Mockito.`when`(repository.getUserFilter()).thenReturn(null)
 
         val result = useCase.invoke()

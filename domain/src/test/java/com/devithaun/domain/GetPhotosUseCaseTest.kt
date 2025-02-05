@@ -26,7 +26,7 @@ class GetPhotosUseCaseTest {
     }
 
     @Test
-    fun onGetPhotos_onSuccess() = runTest {
+    fun result_of_photos_returned_on_successful_invoke() = runTest {
         val mockPhotos = listOf(Photo("1", "Dave", "testURL"))
         Mockito.`when`(repository.getPhotos()).thenReturn(Result.success(mockPhotos))
 
@@ -36,7 +36,7 @@ class GetPhotosUseCaseTest {
     }
 
     @Test
-    fun onGetPhotos_onFailure() = runTest {
+    fun result_of_failure_with_exception_returned_on_failed_invoke() = runTest {
         val exception = Exception("Test Exception")
         Mockito.`when`(repository.getPhotos()).thenReturn(Result.failure(exception))
 

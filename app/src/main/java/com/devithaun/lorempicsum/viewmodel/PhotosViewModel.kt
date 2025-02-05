@@ -1,6 +1,5 @@
 package com.devithaun.lorempicsum.viewmodel
 
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devithaun.domain.model.Photo
@@ -47,7 +46,7 @@ class PhotosViewModel @Inject constructor(
         loadPhotos()
     }
 
-    fun loadPhotos() {
+    private fun loadPhotos() {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
             getPhotosUseCase()

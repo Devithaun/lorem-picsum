@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.devithaun.domain.model.Photo
+import com.devithaun.lorempicsum.ui.components.ErrorDialog
 import com.devithaun.lorempicsum.ui.components.FilterDropDown
 import com.devithaun.lorempicsum.ui.components.LoadingSpinner
 import com.devithaun.lorempicsum.viewmodel.PhotosViewModel
@@ -30,15 +31,26 @@ fun PhotoListScreen(viewModel: PhotosViewModel) {
     val filter by viewModel.filter.collectAsState()
     val authors = photos.map { it.author }.distinct()
     val loading by viewModel.loading.collectAsState()
+    val error by viewModel.error.collectAsState()
+    val retrying by viewModel.isRetrying.collectAsState()
 
     Column {
         FilterDropDown(authors, filter, onAuthorSelected = {
             it?.let { viewModel.setFilter(it) } ?: viewModel.clearFilter()
         })
+
         if (loading) {
             LoadingSpinner()
         } else {
-            PhotoList(photos = photos, filter = filter)
+            if (error.isNullOrBlank()) {
+                PhotoList(photos = photos, filter = filter)
+            } else {
+                ErrorDialog(
+                    "Something went wrong",
+                    error!!,
+                    isLoading = retrying,
+                    onRetry = { viewModel.retry() })
+            }
         }
     }
 }

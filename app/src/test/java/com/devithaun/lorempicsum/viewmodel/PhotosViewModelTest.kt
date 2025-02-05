@@ -44,7 +44,7 @@ class PhotosViewModelTest {
     }
 
     @Test
-    fun onLoadingPhotosComplete_success_state_active() = runTest {
+    fun success_state_active_when_photos_loaded() = runTest {
         val mockPhotos = listOf(Photo("1", "Dave", "testURL"))
         `when`(getPhotosUseCase())
             .thenReturn(Result.success(mockPhotos))
@@ -59,7 +59,7 @@ class PhotosViewModelTest {
     }
 
     @Test
-    fun onLoadingPhotosFailed_error_state_active() = runTest {
+    fun error_state_active_when_photo_load_failed() = runTest {
         val error = Exception("Network Error")
         `when`(getPhotosUseCase.invoke())
             .thenReturn(Result.failure(error))

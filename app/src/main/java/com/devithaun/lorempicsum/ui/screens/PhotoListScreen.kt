@@ -1,7 +1,9 @@
 package com.devithaun.lorempicsum.ui.screens
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -27,44 +30,43 @@ import com.devithaun.lorempicsum.viewmodel.PhotosViewModel
 
 @Composable
 fun PhotoListScreen(viewModel: PhotosViewModel) {
-    val photos by viewModel.photos.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     val filter by viewModel.filter.collectAsState()
-    val authors = photos.map { it.author }.distinct()
-    val loading by viewModel.loading.collectAsState()
-    val error by viewModel.error.collectAsState()
-    val retrying by viewModel.isRetrying.collectAsState()
+    val authors = remember(uiState) {
+        (uiState as? PhotosViewModel.UiState.Success)?.photos?.map { it.author }?.distinct()
+            ?: emptyList()
+    }
 
-    Column {
-        FilterDropDown(authors, filter, onAuthorSelected = {
-            it?.let { viewModel.setFilter(it) } ?: viewModel.clearFilter()
-        })
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column {
+            when (uiState) {
+                is PhotosViewModel.UiState.Loading -> {
+                    LoadingSpinner()
+                }
 
-        if (loading) {
-            LoadingSpinner()
-        } else {
-            if (error.isNullOrBlank()) {
-                PhotoList(photos = photos, filter = filter)
-            } else {
-                ErrorDialog(
-                    "Something went wrong",
-                    error!!,
-                    isLoading = retrying,
-                    onRetry = { viewModel.retry() })
+                is PhotosViewModel.UiState.Success -> {
+                    FilterDropDown(authors, filter, onAuthorSelected = {
+                        it?.let { viewModel.setFilter(it) } ?: viewModel.clearFilter()
+                    })
+                    PhotoList((uiState as PhotosViewModel.UiState.Success).photos)
+                }
+
+                is PhotosViewModel.UiState.Error -> {
+                    ErrorDialog(
+                        title = "Something went wrong",
+                        message = (uiState as PhotosViewModel.UiState.Error).message,
+                        onRetry = { viewModel.retry() }
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun PhotoList(photos: List<Photo>, filter: String?) {
-    val filteredPhotos = if (!filter.isNullOrEmpty()) {
-        photos.filter { it.author.contains(filter, ignoreCase = true) }
-    } else {
-        photos
-    }
-
+fun PhotoList(photos: List<Photo>) {
     LazyColumn {
-        items(filteredPhotos) { photo ->
+        items(photos) { photo ->
             PhotoItem(photo = photo)
         }
     }

@@ -5,8 +5,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.devithaun.data.db.PhotoDao
-import com.devithaun.data.db.toPhotoEntities
-import com.devithaun.data.db.toPhotos
+import com.devithaun.data.db.helper.toPhotoEntities
+import com.devithaun.data.db.helper.toPhotos
 import com.devithaun.data.network.PhotoApi
 import com.devithaun.domain.model.Photo
 import com.devithaun.domain.repository.PhotoRepository

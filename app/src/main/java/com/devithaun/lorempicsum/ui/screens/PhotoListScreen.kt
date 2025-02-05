@@ -19,9 +19,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.devithaun.domain.model.Photo
 import com.devithaun.lorempicsum.ui.components.ErrorDialog
 import com.devithaun.lorempicsum.ui.components.FilterDropDown
@@ -87,7 +90,12 @@ fun PhotoItem(photo: Photo) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
-                model = photo.url,
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(photo.url)
+                    .crossfade(true)
+                    .diskCachePolicy(CachePolicy.ENABLED)
+                    .memoryCachePolicy(CachePolicy.ENABLED)
+                    .build(),
                 contentDescription = "Photo by ${photo.author}",
                 modifier = Modifier
                     .fillMaxWidth()

@@ -1,5 +1,6 @@
 package com.devithaun.data.repository
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -23,15 +24,13 @@ class PhotoRepositoryImpl @Inject constructor(
         private val KEY = stringPreferencesKey("filter")
     }
 
-    override suspend fun getPhotos(): List<Photo> {
+    override suspend fun getPhotos(): Result<List<Photo>> {
         val cachedPhotos = photoDao.getAllPhotos()
-        return if (cachedPhotos.isNotEmpty()) {
-            cachedPhotos.toPhotos()
-        } else {
-            val photos = api.getPhotos()
-            photoDao.insertPhotos(photos.toPhotoEntities())
-            photos
 
+        return if (cachedPhotos.isNotEmpty()) {
+            Result.success(cachedPhotos.toPhotos())
+        } else {
+            loadFromApi()
         }
     }
 
@@ -44,5 +43,16 @@ class PhotoRepositoryImpl @Inject constructor(
     override suspend fun getUserFilter(): String? {
         val prefs = dataStore.data.first()
         return prefs[KEY]
+    }
+
+    private suspend fun loadFromApi(): Result<List<Photo>> {
+        return try {
+            val photos = api.getPhotos()
+            photoDao.insertPhotos(photos.toPhotoEntities())
+            Result.success(photos)
+        } catch (e: Exception) {
+            Log.e("PhotoRepositoryImpl", "Error fetching photos", e)
+            Result.failure(e)
+        }
     }
 }

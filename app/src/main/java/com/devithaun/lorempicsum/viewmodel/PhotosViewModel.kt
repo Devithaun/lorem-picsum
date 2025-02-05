@@ -2,6 +2,7 @@ package com.devithaun.lorempicsum.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devithaun.domain.model.Photo
 import com.devithaun.domain.usecase.GetPhotosUseCase
 import com.devithaun.domain.usecase.GetUserFilterUseCase
@@ -28,6 +29,12 @@ class PhotosViewModel @Inject constructor(
     private val _loading = MutableStateFlow(true)
     val loading: StateFlow<Boolean> = _loading
 
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error
+
+    private val _isRetrying = MutableStateFlow(false)
+    val isRetrying: StateFlow<Boolean> = _isRetrying
+
     init {
         viewModelScope.launch {
             _filter.value = getUserFilterUseCase()
@@ -38,13 +45,36 @@ class PhotosViewModel @Inject constructor(
     private fun loadPhotos() {
         viewModelScope.launch {
             _loading.value = true
-            val photos = getPhotosUseCase()
-            _photos.value = if (_filter.value.isNullOrEmpty()) {
-                photos
-            } else {
-                photos.filter { it.author == _filter.value }
-            }
+            getPhotosUseCase()
+                .onSuccess { photos ->
+                    _error.value = null
+                    _photos.value = if (_filter.value.isNullOrEmpty()) {
+                        photos
+                    } else {
+                        photos.filter { it.author == _filter.value }
+                    }
+                }.onFailure {
+                    _error.value = "Failed to load photos. Please check your connection!"
+                }
             _loading.value = false
+        }
+    }
+
+    fun retry() {
+        viewModelScope.launch {
+            _isRetrying.value = true
+            getPhotosUseCase()
+                .onSuccess { photos ->
+                    _error.value = null
+                    _photos.value = if (_filter.value.isNullOrEmpty()) {
+                        photos
+                    } else {
+                        photos.filter { it.author == _filter.value }
+                    }
+                }.onFailure {
+                    _error.value = "Failed to load photos. Please check your connection!"
+                }
+            _isRetrying.value = false
         }
     }
 

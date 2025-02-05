@@ -1,5 +1,6 @@
-package com.devithaun.data.db
+package com.devithaun.data.db.helper
 
+import com.devithaun.data.db.PhotoEntity
 import com.devithaun.domain.model.Photo
 
 fun List<Photo>.toPhotoEntities(): List<PhotoEntity> {

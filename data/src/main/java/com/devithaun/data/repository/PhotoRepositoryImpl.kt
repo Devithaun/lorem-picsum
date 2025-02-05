@@ -1,6 +1,5 @@
 package com.devithaun.data.repository
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -51,7 +50,6 @@ class PhotoRepositoryImpl @Inject constructor(
             photoDao.insertPhotos(photos.toPhotoEntities())
             Result.success(photos)
         } catch (e: Exception) {
-            Log.e("PhotoRepositoryImpl", "Error fetching photos", e)
             Result.failure(e)
         }
     }
